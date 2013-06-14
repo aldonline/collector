@@ -10,7 +10,8 @@ class Collector
         @_stack.push []
         returned  = func.apply null, arguments
         @_stack.pop().concat [returned]
-      finally
+      catch e
         @_stack.pop()
+        throw e
 
 module.exports = -> new Collector

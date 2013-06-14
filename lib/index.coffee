@@ -1,17 +1,9 @@
-class Collector
-  constructor: -> @_stack = []
-  collect: ( value ) => @_stack[-1..][0]?.push value
-  # combinator that wraps a function so it creates a clean stack for itself
-  attach : ( func ) =>
-    unless typeof func is 'function'
-      throw new Error 'function argument required'
-    =>
-      try
-        @_stack.push []
-        returned  = func.apply null, arguments
-        @_stack.pop().concat [returned]
-      catch e
-        @_stack.pop()
-        throw e
+stackval = require 'stackval'
 
-module.exports = -> new Collector
+module.exports = ->
+  sv = stackval()
+  attach: (f) -> ->
+    collected = []
+    f2 = sv.attach f, -> collected
+    collected.concat [ f2.apply null, arguments ]
+  collect: ( value ) -> sv.get().push value

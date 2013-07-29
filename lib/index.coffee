@@ -6,7 +6,7 @@ module.exports = ->
   x.attach = (f) -> ->
     collected = []
     f2 = sv.attach f, -> collected
-    collected.concat [ f2.apply null, arguments ]
+    collected.concat [ f2.apply @, arguments ]
   x.run = (f) -> x.attach(f)()
   x.defined = -> sv.defined()
   x.collect = x
